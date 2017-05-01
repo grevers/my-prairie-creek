@@ -1,0 +1,9 @@
+<html><head><link rel="import" href="../../bower_components/polymer/polymer.html">
+
+</head><body><dom-module id="current-site">
+  <template>
+    <array-selector id="selector" items="{{sites}}" selected="{{site}}"></array-selector>
+  </template>
+  <script>Polymer({is:"current-site",properties:{latitude:Number,longitude:Number,range:Number,sites:{type:Array},site:{type:Object,notify:!0,value:null}},observers:["_determineSite(latitude,longitude,sites)"],_determineSite:function(e,t,r){const i=1e6;for(var s,l,n,o,u=i,a=0;a<r.length;a++)l=e-r[a].latitude,n=t-r[a].longitude,s=Math.sqrt(l*l+n*n),s<u&&s<=r[a].range&&(u=s,o=a);u==i?this.$.selector.clearSelection():this.$.selector.select(r[o])}});</script>
+</dom-module>
+</body></html>

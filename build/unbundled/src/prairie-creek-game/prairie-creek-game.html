@@ -1,0 +1,93 @@
+<html><head><link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-styles/default-theme.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/iron-localstorage/iron-localstorage.html">
+
+<link rel="import" href="../current-site/current-site.html">
+<link rel="import" href="../map-data/map-data.html">
+<link rel="import" href="../user-location/user-location.html">
+<link rel="import" href="../shared-styles/shared-styles.html">
+<link rel="import" href="../drop-menu/drop-menu.html">
+<link rel="import" href="../image-cache/image-cache.html">
+
+<link rel="import" href="../title-view/title-view.html">
+<link rel="import" href="../map-view/map-view.html">
+<link rel="import" href="../timer-view/timer-view.html">
+<link rel="import" href="../checklist-view/checklist-view.html">
+<link rel="import" href="../spirit-view/spirit-view.html">
+<link rel="import" href="../team-view/team-view.html">
+<link rel="import" href="../missing-view/missing-view.html">
+<link rel="import" href="../dev-mode-echo/dev-mode-echo.html">
+
+
+</head><body><dom-module id="prairie-creek-game">
+  <template>
+    <style include="shared-styles">
+      :host {
+        font-family: var(--font-common-base);
+      }
+
+      drop-menu {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        z-index: 1;
+      }
+
+      dev-mode-echo {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+      }
+
+      iron-pages {
+        background-color: var(--primary-background-color);
+        position: relative;
+        top: 0px;
+        z-index: 0;
+      }
+    </style>
+    <map-data data="{{mapData}}"></map-data>
+    <image-cache map-data="[[mapData]]"></image-cache>
+    <user-location active="[[gpsActive]]" latitude="{{latitude}}" longitude="{{longitude}}" error="{{gpsError}}" high-accuracy="[[devMode.highAccuracy]]" watch="[[devMode.userLocation]]">
+    </user-location>
+    <current-site latitude="[[latitude]]" longitude="[[longitude]]" sites="[[mapData]]" site="{{currentSite}}"></current-site>
+    <iron-localstorage name="my-app-storage" value="{{mapData}}">
+    </iron-localstorage>
+    <iron-localstorage name="appState" value="{{appState}}" on-iron-localstorage-load-empty="_initializeAppState">
+    </iron-localstorage>
+    <iron-localstorage name="currentSite" value="{{currentSite}}">
+    </iron-localstorage>
+
+    <drop-menu on-reset="_resetGame" dev-mode="{{devMode}}">
+    </drop-menu>
+    <template is="dom-if" if$="[[devMode.echo]]">
+      <dev-mode-echo latitude="[[latitude]]" longitude="[[longitude]]" error="[[gpsError]]">
+      </dev-mode-echo>
+    </template>
+
+    <iron-pages id="pages" selected="[[appState]]" attr-for-selected="name" on-iron-select="_onPageChanged">
+      <title-view name="title" app-state="{{appState}}" latitude="{{latitude}}" longitude="{{longitude}}" dev-mode="[[devMode]]" locations="[[mapData]]" gps-active="">
+      </title-view>
+      <map-view name="map" locations="[[mapData]]" latitude="{{latitude}}" longitude="{{longitude}}" current-site="[[currentSite]]" app-state="{{appState}}" dev-mode="[[devMode]]" gps-active="">
+      </map-view>
+      <timer-view name="timer" prompt="[[currentSite.prompt]]" app-state="{{appState}}" short-timer="[[devMode.shortTimer]]">
+      </timer-view>
+      <checklist-view name="checklist" map-data="{{mapData}}" current-site="[[currentSite]]" app-state="{{appState}}">
+      </checklist-view>
+      <spirit-view name="spirit" map-data="[[mapData]]" current-site="[[currentSite]]" app-state="{{appState}}">
+      </spirit-view>
+      <team-view name="team" map-data="[[mapData]]" app-state="{{appState}}">
+      </team-view>
+      <missing-view name="missing" app-state="{{appState}}">
+      </missing-view>
+    </iron-pages>
+  </template>
+
+  <script>Polymer({is:"prairie-creek-game",properties:{mapData:{type:Object,notify:!0},spiritData:{type:Object},appState:{type:String,value:"title",notify:!0},currentSite:{type:Object,notify:!0},devMode:{type:Object,notify:!0,value:function(){return{echo:!1,warp:!1,override:!1,highAccuracy:!0,shortTimer:!1,userLocation:!0}}},gpsActive:{type:Boolean,value:!1},gpsError:String},observers:["_pageChanged(appState)"],_pageChanged:function(t){var e=this.mapData;this.mapData=[],this.mapData=e,t&&"title"===t&&this.$$("map-data").reset()},_showPage404:function(){this.appState="missing"},_onPageChanged:function(t){this.gpsActive=this.$.pages.selectedItem.hasAttribute("gps-active")},_resetGame:function(){this.appState="title"},_initializeAppState:function(){this.appState="title"}});</script>
+</dom-module>
+</body></html>
