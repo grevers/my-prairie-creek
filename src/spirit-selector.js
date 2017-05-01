@@ -1,1 +1,0 @@
-function selectSpirit(e){for(var t=0,r=0;r<e.responses.length;r++)e.responses[r].selected&&(t+=e.responses[r].value);var i=t<0?"artificial":"natural";return _select(i,e)}function _select(e,t){return{image:"images/spirits/"+t.shortname+"-"+e+".png",text:"artificial"===e?t.artificial:t.natural}}
