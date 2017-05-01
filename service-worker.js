@@ -29,7 +29,7 @@
 
 
 /* eslint-disable quotes, comma-spacing */
-var PrecacheConfig = [["/index.html","35d986138f1c718210848fcff8f7eaf8"],["/src/prairie-creek-game/prairie-creek-game.html","f0181c20bee5398bab4886b31e6a82d3"]];
+var PrecacheConfig = [["/index.html","35d986138f1c718210848fcff8f7eaf8"],["/src/prairie-creek-game/prairie-creek-game.html","2db70fdb7a5dd7c521fab3ec5e11632d"]];
 /* eslint-enable quotes, comma-spacing */
 var CacheNamePrefix = 'sw-precache-v1--' + (self.registration ? self.registration.scope : '') + '-';
 

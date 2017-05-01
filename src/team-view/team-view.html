@@ -1,6 +1,6 @@
 <html><head><link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-
+<link rel="import" href="../../bower_components/social-media-icons/social-media-icons.html">
 
 <link rel="import" href="../spirit-team/spirit-team.html">
 <link rel="import" href="../view-behavior/view-behavior.html">
@@ -23,6 +23,11 @@
                 margin-left: 25%;
                 width: 50%;
             }
+
+            #fb-share-btn {
+              padding-top: 10%;
+              margin-left: 25%;
+            }
         </style>
 
         <div class="text">
@@ -32,7 +37,10 @@
         <spirit-team id="team"></spirit-team>
 
         <paper-button raised="" on-tap="_next">Play Again</paper-button>
-        <paper-button id="shareBtn" raised="" on-tap="shareClick">Share</paper-button>
+        <div id="fb-share-btn">
+          <social-media-icons icon="facebook" raised="" on-tap="shareClick"></social-media-icons>
+        </div>
+        
     </template>
     <script>Polymer({is:"team-view",behaviors:[ViewBehavior],properties:{mapData:Object,_spiritNames:String,shareText:{type:String,computed:"generateText(_spiritNames)"}},observers:["_appStateChanged(appState)"],ready:function(){window.fbAsyncInit=function(){FB.init({appId:"1923680841195910",xfbml:!1,version:"v2.9"}),FB.AppEvents.logPageView()},function(e,t,a){var i,r=e.getElementsByTagName(t)[0];e.getElementById(a)||(i=e.createElement(t),i.id=a,i.src="//connect.facebook.net/en_US/sdk.js",r.parentNode.insertBefore(i,r))}(document,"script","facebook-jssdk")},generateText:function(e){return console.log(e),"I found "+e+" at Prairie Creek Park."},shareClick:function(){console.log(this.shareText),FB.ui({method:"share",display:"popup",quote:this.shareText,href:"https://grevers.github.io/my-prairie-creek/"},function(e){})},_next:function(){this._goToView("title")},_appStateChanged:function(e){if("team"===e){var t=this._selectedSpirits();this.$.team.images=this._toImageArray(t),this._spiritNames=this._makeNameString(t)}},_selectedSpirits:function(){for(var e=[],t=0;t<this.mapData.length;t++){var a=selectSpirit(this.mapData[t]);e.push(a)}return this._shuffle(e),e},_shuffle:function(e){var t,a,i;for(i=e.length;i;i--)t=Math.floor(Math.random()*i),a=e[i-1],e[i-1]=e[t],e[t]=a},_toImageArray:function(e){for(var t=[],a=0;a<e.length;a++)t.push(e[a].image);return t},_makeNameString:function(e){for(var t="",a=0;a<e.length;a++)t+=e[a].text.name,a<e.length-1&&(t+=", "),a===e.length-2&&(t+="and ");return t}});</script>
 </dom-module>
